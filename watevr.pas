@@ -292,18 +292,18 @@ begin               {HP}
   clrscr;
   writeln;
   writeln ('Hallo!');
-  writeln ('Du hast dich fr die neueste und innovativste M”glichkeit entschieden,');
+  writeln ('Du hast dich fuer die neueste und innovativste M”glichkeit entschieden,');
   writeln ('im 21. Jahrhundert deinen pers”nlichen Stundenplan zu erstellen.');
   writeln ('Dieses Programm kam am 01. Januar 2000 auf den Markt und soll das Leben');
-  writeln ('vieler Schler entscheidend verbessern.');
+  writeln ('vieler Schueler entscheidend verbessern.');
   textcolor (lightred);
   write ('Stundi');
   textcolor (lightgreen);
   write (' 2000');
   textcolor (white);
   writeln (' „ndert die Art und Weise, wie auf der Welt Stundenpl„ne erstellt werden.');
-  writeln ('Da sich das Programm noch am Anfang befindet, wird es fr die Zeit der ');
-  writeln ('Ver”ffentlichung ausschlieálich fr die Oberstufen in Thringen.');
+  writeln ('Da sich das Programm noch am Anfang befindet, wird es fuer die Zeit der ');
+  writeln ('Ver”ffentlichung ausschlieálich fuer die Oberstufen in Thueringen.');
   readln;
   writeln('Geben Sie bitte Buchstaben ein!');
   for t := 1 to 2 do
