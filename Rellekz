@@ -3,18 +3,23 @@ uses Crt;
 type
   person = array[1..79] of record
        Name: string;
-       GWeA, NawieA, SpracheeA, AntwortMusikKunst, GWgA, NawigA, SprachegA, Wahlfach : char;
+       GWeA, NawieA, SpracheeA, AntwortMusikKunst, GWgA, NawigA, SprachegA : char;
        Kunst, Musik, ReligA, KFMathe, KFDeutsch : boolean;
   end;
   AnzahlProKurs = array[1..27,1..4] of integer;
   KursAnzahl = array[1..29] of integer;
+  Plan = array[1..5,1..9,1..5] of string;
+  temp_plan = array[1..5,1..9] of string;
+
 
 var Elfer : person;
     AnzahlDerKurse, AnzahlKurseProFach : KursAnzahl;
     AnzahlSchuelerProKurs : AnzahlProKurs;
-    AnzahlKlasse, AnzahlElfer, Anzahl, AnzahlSchueler : integer;
+    AnzahlKlasse, AnzahlElfer, Anzahl, AnzahlSchueler,a,b,c,d,e,f,g,h,j,k,l : integer;
     Ausgabe1 : char;
     Eingabe1 : string;
+    Stundi2000 : plan;
+    temp_stundenplan : temp_plan;
 
 procedure Eingabenueberpruefung(var Eingabe2 : string; var Ausgabe2 : char);
   begin
@@ -30,11 +35,75 @@ procedure Eingabenueberpruefung(var Eingabe2 : string; var Ausgabe2 : char);
     if Eingabe2 = 'Geographie' then Ausgabe2 := 'G';
     if Eingabe2 = 'WR' then Ausgabe2 := 'W';
     if Eingabe2 = 'Sozialkunde' then Ausgabe2 := 'S';
-    if Eingabe2 = 'Informatik' then Ausgabe2 := 'I';
   end;
 
+function gruppe : string;
+var z : integer;
+  begin
+  randomize;
+    repeat
+      z := random(11) + 1;
+      writeln('z = ',z);
+      if (z = 1) and (a > 0) then
+        begin
+          gruppe := 'Deutsch';
+          a := a - 1;
+        end
+      else if (z = 2) and (b > 0) then
+        begin
+          gruppe := 'Mathe';
+          b := b - 1;
+        end
+      else if (z = 3) and (c > 0) then
+        begin
+          gruppe := 'Nawi eA';
+          c := c - 1;
+        end
+      else if (z = 4) and (d > 0) then
+        begin
+          gruppe := 'GW eA';
+          d := d - 1;
+        end
+      else if (z = 5) and (e > 0) then
+        begin
+          gruppe := 'Nawi gA';
+          e := e - 1;
+        end
+      else if (z = 6) and (f > 0) then
+        begin
+          gruppe := 'GW gA';
+          f := f - 1;
+        end
+      else if (z = 7) and (g > 0) then
+        begin
+          gruppe := 'Sprache eA';
+          g := g - 1;
+        end
+      else if (z = 8) and (h > 0) then
+        begin
+          gruppe := 'Sprache gA';
+          h := h - 1;
+        end
+      else if (z = 9) and (j > 0) then
+        begin
+          gruppe := 'Reli gA';
+          j := j - 1;
+        end
+      else if (z = 10) and (k > 0) then
+        begin
+          gruppe := 'Sport';
+          k := k - 1;
+        end
+      else if (z = 11) and (l > 0) then
+        begin
+          gruppe := 'Musik/Kunst';
+          l := l - 1;
+        end
+      else gruppe := 'x';
+    until (gruppe <> 'x') or (a = 0) and (b = 0) and (c = 0) and (d = 0) and (e = 0) and (f = 0) and (g = 0) and (h = 0) and (j = 0) and (k = 0);
+  end;
 
-procedure BerechnungKurse (var AFK : KursAnzahl; var AnzahlKurs : KursAnzahl; var AnzahlSchuelerKurs : AnzahlProKurs);
+procedure BerechnungKurse(var AFK : KursAnzahl; var AnzahlKurs : KursAnzahl; var AnzahlSchuelerKurs : AnzahlProKurs);
 var i : integer;
   begin
     for i := 1 to 29 do
@@ -146,17 +215,17 @@ procedure counter(var Kl : person; var AFK : KursAnzahl; AnzahlSchueler : intege
           AFK[9] := AFK[9] + 1;
         if Kl[n].GWeA = 'R' then                                      {Religion eA 10}
           AFK[10] := AFK[10] + 1;
-        if (Kl[n].NawigA = 'P') or (Kl[n].Wahlfach = 'P') then        {Physik gA 11}
+        if (Kl[n].NawigA = 'P') then                                  {Physik gA 11}
           AFK[11] := AFK[11] + 1;
-        if (Kl[n].NawigA = 'B') or (Kl[n].Wahlfach = 'B') then        {Biologie gA 12}
+        if (Kl[n].NawigA = 'B') then                                  {Biologie gA 12}
           AFK[12] := AFK[12] + 1;
-        if (Kl[n].NawigA = 'C') or (Kl[n].Wahlfach = 'C') then        {Chemie gA 13}
+        if (Kl[n].NawigA = 'C') then                                  {Chemie gA 13}
           AFK[13] := AFK[13] + 1;
-        if (Kl[n].GWgA = 'W') or (Kl[n].Wahlfach = 'W') then          {WR gA 14}
+        if (Kl[n].GWgA = 'W') then                                    {WR gA 14}
           AFK[14] := AFK[14]+ 1;
-        if (Kl[n].GWgA = 'S') or (Kl[n].Wahlfach = 'S') then          {Sozialkunde gA 15}
+        if (Kl[n].GWgA = 'S') then                                    {Sozialkunde gA 15}
           AFK[15] := AFK[15] + 1;
-        if (Kl[n].GWgA = 'G') or (Kl[n].Wahlfach = 'G') then          {Geographie gA 16}
+        if (Kl[n].GWgA = 'G') then                                    {Geographie gA 16}
           AFK[16] := AFK[16] + 1;
         if (Kl[n].GWgA = 'Z') then                                    {Geschichte gA 17}
            AFK[17] := AFK[17] + 1;
@@ -174,13 +243,13 @@ procedure counter(var Kl : person; var AFK : KursAnzahl; AnzahlSchueler : intege
           AFK[23] := AFK[23] + 1;
         if Kl[n].SpracheeA = 'A' then                                 {Altgriechisch eA 24}
           AFK[24] := AFK[24] + 1;
-        if (Kl[n].SprachegA = 'E') or (KL[n].Wahlfach = 'E') then     {Englisch gA 25}
+        if (Kl[n].SprachegA = 'E') then                               {Englisch gA 25}
           AFK[24] := AFK[24] + 1;
-        if (Kl[n].SprachegA = 'F') or (KL[n].Wahlfach = 'F') then     {Franzoesisch gA 26}
+        if (Kl[n].SprachegA = 'F') then                               {Franzoesisch gA 26}
           AFK[25] := AFK[25] + 1;
-        if (Kl[n].SprachegA = 'L') or (KL[n].Wahlfach = 'L') then     {Latein gA 27}
+        if (Kl[n].SprachegA = 'L') then                               {Latein gA 27}
           AFK[26] := AFK[26] + 1;
-        if (Kl[n].SprachegA = 'A') or (KL[n].Wahlfach = 'A') then     {Altgriechisch gA 28}
+        if (Kl[n].SprachegA = 'A') then                               {Altgriechisch gA 28}
           AFK[27] := AFK[27] + 1;
         AFK[28] := AnzahlSchueler;                                    {Seminarfach 29}
         AFK[29] := AnzahlSchueler;                                    {Sport gA 30}
@@ -189,7 +258,6 @@ procedure counter(var Kl : person; var AFK : KursAnzahl; AnzahlSchueler : intege
 
 procedure Abfrage(var person_elfer : person; AnzahlSchueler : integer);
 var i : integer;
-    Wahlfachantwort : char;
   begin
     for i := 1 to AnzahlSchueler do
       begin
@@ -197,7 +265,7 @@ var i : integer;
         write('Wie heissen Sie? ');
         readln(person_elfer[i].Name);
         writeln;
-        writeln('Folgende Antwortmoeglichkeiten stehen zur Verfuegung: (ae, oe, ue und ß = ss beachten)');
+        writeln('Folgende Antwortmoeglichkeiten stehen zur Verfuegung: (ae, oe, ue und sz = ss beachten)');
         writeln('Altgriechisch, Biologie, Chemie, Englisch, Franzoesisch, Geographie, Geschichte, Informatik, Latein, Physik, Religion, Sozialkunde, WR');
         writeln;
         write('Sie muessen Mathe und Deutsch mit erhoehtem Anforderungsniveau, ausserdem noch   Seminarfach und Sport');
@@ -260,20 +328,90 @@ var i : integer;
           end;
 
         writeln;
-        writeln('Haben Sie ein Wahlfach gewaehlt? <y/n> ');
-        readln(WahlfachAntwort);
-        if WahlfachAntwort = 'y' then
-          begin
-            writeln('Welches Wahlfach haben Sie gewaehlt?');
-            readln(person_elfer[i].Wahlfach);
-          end
-        else
-          writeln('Sie haben also kein Wahlfach gewaehlt.');
     end;
   end;
 
+
+procedure Stundenplanerstellung (var AnzahlKurs : KursAnzahl; var AnzahlSchuelerKurs : AnzahlProKurs; var Stundi : plan; var Stundenplan : temp_plan);
+var tag, stunde, kurs, i, n : integer;
+    temp : string;
+  begin
+    Stundi[1,1,1] := ' ';
+    Stundenplan[1,1] := 'A';
+    randomize;
+    tag := 1;
+    stunde := 2;
+    temp := gruppe;
+    Stundenplan[tag,stunde] := temp;
+    Stundenplan[tag,stunde + 1] := temp;
+    temp := gruppe;
+    stunde := 4;
+    Stundenplan[tag,stunde] := temp;
+    Stundenplan[tag,stunde + 1] := temp;
+    temp := gruppe;
+    stunde := 6;
+    Stundenplan[tag,stunde] := temp;
+    Stundenplan[tag,stunde + 1] := temp;
+    temp := gruppe;
+    stunde := 8;
+    Stundenplan[tag,stunde] := temp;
+    Stundenplan[tag,stunde + 1] := temp;
+    for tag := 2 to 5 do
+      begin
+        randomize;
+        i := random(2) + 1;
+        if i = 1 then
+          begin
+            stunde := 1;
+            temp := gruppe;
+            Stundenplan[tag,stunde] := temp;
+            Stundenplan[tag,stunde + 1] := temp;
+          end
+        else i := 2; {nur als platzhalter für else}
+        stunde := 3;
+        temp := gruppe;
+        Stundenplan[tag,stunde] := temp;
+        Stundenplan[tag,stunde + 1] := temp;
+        stunde := 5;
+        temp := gruppe;
+        Stundenplan[tag,stunde] := temp;
+        Stundenplan[tag,stunde + 1] := temp;
+        stunde := 7;
+        randomize;
+        i := random(2) + 1;
+        if i = 1 then
+          begin
+            temp := gruppe;
+            Stundenplan[tag,stunde] := temp;
+            Stundenplan[tag,stunde + 1] := temp;
+          end
+        else i := 2;
+      end;
+    for i := 1 to 5 do
+      begin
+        for n := 1 to 9 do
+          begin
+            write(i,',',n,' ');
+            writeln(Stundenplan[i,n]);         {writeln!}
+          end;
+        readln;
+      end;
+  end;
+
+
 begin               {HP}
   clrscr;
+  a := 2;
+  b := 2;
+  c := 2;
+  d := 2;
+  e := 1;
+  f := 1;
+  g := 2;
+  h := 1;
+  j := 1;
+  k := 1;
+  l := 1;
   textcolor(lightred);
   writeln(' __________ _____________ _____   _____ _____       _____ __________   ____  ');
   writeln(' I        I I           I I   I   I   I I    \      I   I I         \  I  I  ');
@@ -323,5 +461,6 @@ begin               {HP}
   Abfrage(Elfer, AnzahlSchueler);
   counter(Elfer, AnzahlDerKurse, AnzahlSchueler);
   BerechnungKurse(AnzahlDerKurse, AnzahlKurseProFach, AnzahlSchuelerProKurs);
+  Stundenplanerstellung(AnzahlKurseProFach, AnzahlSchuelerProKurs, Stundi2000, temp_stundenplan);
   readln;
 end.
