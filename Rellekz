@@ -7,8 +7,8 @@ type
        Kunst, Musik, ReligA, KFMathe, KFDeutsch : boolean;
   end;
   AnzahlProKurs = array[1..27,1..4] of integer;
-  KursAnzahl = array[1..29] of integer;
-  Plan = array[1..5,1..9,1..5] of string;
+  KursAnzahl = array[1..30] of integer;
+  plan = array[1..5,1..9,1..5] of string;
   temp_plan = array[1..5,1..9] of string;
 
 
@@ -43,7 +43,6 @@ var z : integer;
   randomize;
     repeat
       z := random(11) + 1;
-      writeln('z = ',z);
       if (z = 1) and (a > 0) then
         begin
           gruppe := 'Deutsch';
@@ -106,7 +105,7 @@ var z : integer;
 procedure BerechnungKurse(var AFK : KursAnzahl; var AnzahlKurs : KursAnzahl; var AnzahlSchuelerKurs : AnzahlProKurs);
 var i : integer;
   begin
-    for i := 1 to 29 do
+    for i := 1 to 30 do
       begin
 
         if (AFK[i] > 24) and (AFK[i] <= 48) then
@@ -164,9 +163,9 @@ var i : integer;
               AnzahlSchuelerKurs[i,2] := AFK[i] div 4 + 1;
               AnzahlSchuelerKurs[i,3] := AFK[i] div 4;
               AnzahlSchuelerKurs[i,4] := AFK[i] div 4;
-            end;
+            end
 
-          if AFK[i] mod 4 = 3 then
+          else if AFK[i] mod 4 = 3 then
             begin
               AnzahlSchuelerKurs[i,1] := AFK[i] div 4 + 1;
               AnzahlSchuelerKurs[i,2] := AFK[i] div 4 + 1;
@@ -187,12 +186,16 @@ var i : integer;
             AnzahlKurs[i] := 1;
             AnzahlSchuelerKurs[i,1] := AFK[i];
           end;
+        if AFK[i] = 0 then
+          AnzahlKurs[i] := 0;
       end;
   end;
 
 procedure counter(var Kl : person; var AFK : KursAnzahl; AnzahlSchueler : integer);
-  var n : integer;
+  var i, n : integer;
   begin
+    for i := 1 to 30 do
+      AFK[i] := 0;
     for n := 1 to AnzahlSchueler do
       begin
         if Kl[n].Musik = true then                                    {Musik gA 1}
@@ -244,15 +247,15 @@ procedure counter(var Kl : person; var AFK : KursAnzahl; AnzahlSchueler : intege
         if Kl[n].SpracheeA = 'A' then                                 {Altgriechisch eA 24}
           AFK[24] := AFK[24] + 1;
         if (Kl[n].SprachegA = 'E') then                               {Englisch gA 25}
-          AFK[24] := AFK[24] + 1;
-        if (Kl[n].SprachegA = 'F') then                               {Franzoesisch gA 26}
           AFK[25] := AFK[25] + 1;
-        if (Kl[n].SprachegA = 'L') then                               {Latein gA 27}
+        if (Kl[n].SprachegA = 'F') then                               {Franzoesisch gA 26}
           AFK[26] := AFK[26] + 1;
-        if (Kl[n].SprachegA = 'A') then                               {Altgriechisch gA 28}
+        if (Kl[n].SprachegA = 'L') then                               {Latein gA 27}
           AFK[27] := AFK[27] + 1;
-        AFK[28] := AnzahlSchueler;                                    {Seminarfach 29}
-        AFK[29] := AnzahlSchueler;                                    {Sport gA 30}
+        if (Kl[n].SprachegA = 'A') then                               {Altgriechisch gA 28}
+          AFK[28] := AFK[28] + 1;
+        AFK[29] := AnzahlSchueler;                                    {Seminarfach 29}
+        AFK[30] := AnzahlSchueler;                                    {Sport gA 30}
       end;
     end;
 
@@ -331,9 +334,110 @@ var i : integer;
     end;
   end;
 
+procedure Stundenplanhilfe (var Stundenplan : temp_plan; var Stundi : plan; var AnzahlKurs : Kursanzahl);
+var i, n, t, x : integer;
+  begin
+    for i := 1 to 5 do
+      begin
+        for n := 1 to 9 do
+          begin
+            if Stundenplan[i,n] = 'Deutsch' then
+              begin
+                for t := 1 to AnzahlKurs[19] do
+                  Stundi[i,n,t] := 'Deutsch eA';
+              end
+            else if Stundenplan[i,n] = 'Mathe' then
+              begin
+                for t := 1 to AnzahlKurs[20] do
+                  Stundi[i,n,t] := 'Mathe eA';
+              end
+            else if Stundenplan[i,n] = 'Nawi eA' then
+              begin
+                for t := 1 to AnzahlKurs[3] do                                                                          {Physik eA}
+                  Stundi[i,n,t] := 'Physik eA';
+                for t := 1 + AnzahlKurs[3] to AnzahlKurs[3] + AnzahlKurs[4] do                                          {Biologie eA}
+                  Stundi[i,n,t] := 'Biologie eA';
+                for t := 1 + AnzahlKurs[3] + AnzahlKurs[4] to AnzahlKurs[3] + AnzahlKurs[4] + AnzahlKurs[5] do          {Chemie eA}
+                  Stundi[i,n,t] := 'Chemie eA';
+              end
+            else if Stundenplan[i,n] = 'Nawi gA' then
+              begin
+                for t := 1 to AnzahlKurs[11] do                                                                         {Physik gA}
+                  Stundi[i,n,t] := 'Physik gA';
+                for t := 1 + AnzahlKurs[11] to AnzahlKurs[11] + AnzahlKurs[12] do                                       {Biologie gA}
+                  Stundi[i,n,t] := 'Biologie gA';
+                for t := 1 + AnzahlKurs[11] + AnzahlKurs[12] to AnzahlKurs[11] + AnzahlKurs[12] + AnzahlKurs[13] do     {Chemie gA}
+                  Stundi[i,n,t] := 'Chemie gA';
+              end
+            else if Stundenplan[i,n] = 'GW eA' then
+              begin
+                for t := 1 to AnzahlKurs[6] do                                                                           {WR eA}
+                  Stundi[i,n,t] := 'WR eA';
+                for t := 1 + AnzahlKurs[6] to AnzahlKurs[6] + AnzahlKurs[7] do                                       {Sozialkunde eA}
+                  Stundi[i,n,t] := 'Sozialkunde eA';
+                for t := 1 + AnzahlKurs[6] + AnzahlKurs[7] to AnzahlKurs[6] + AnzahlKurs[7] + AnzahlKurs[8] do     {Geographie eA}
+                  Stundi[i,n,t] := 'Geographie eA';
+                for t := 1 + AnzahlKurs[6] + AnzahlKurs[7] + AnzahlKurs[8] to AnzahlKurs[6] + AnzahlKurs[7] + AnzahlKurs[8] + AnzahlKurs[9] do    {Geschichte eA}
+                  Stundi[i,n,t] := 'Geschichte eA';
+                for t := 1 + AnzahlKurs[6] + AnzahlKurs[7] + AnzahlKurs[8] + AnzahlKurs[9] to AnzahlKurs[6] + AnzahlKurs[7] + AnzahlKurs[8] + AnzahlKurs[9] + AnzahlKurs[10] do     {Reli eA}
+                  Stundi[i,n,t] := 'Religion eA';
+              end
+            else if Stundenplan[i,n] = 'GW gA' then
+              begin
+                for t := 1 to AnzahlKurs[14] do                                                                           {WR gA}
+                  Stundi[i,n,t] := 'WR gA';
+                for t := 1 + AnzahlKurs[14] to AnzahlKurs[14] + AnzahlKurs[15] do                                       {Sozialkunde gA}
+                  Stundi[i,n,t] := 'Sozialkunde gA';
+                for t := 1 + AnzahlKurs[14] + AnzahlKurs[15] to AnzahlKurs[14] + AnzahlKurs[15] + AnzahlKurs[16] do     {Geographie gA}
+                  Stundi[i,n,t] := 'Geographie gA';
+                for t := 1 + AnzahlKurs[14] + AnzahlKurs[15] + AnzahlKurs[16] to AnzahlKurs[14] + AnzahlKurs[15] + AnzahlKurs[16] + AnzahlKurs[17] do      {Geschichte gA}
+                  Stundi[i,n,t] := 'Geschichte gA';
+              end
+            else if Stundenplan[i,n] = 'Musik/Kunst' then
+              begin
+                for t := 1 to AnzahlKurs[1] do
+                  Stundi[i,n,t] := 'Musik gA';
+                for t := 1 + AnzahlKurs[1] to AnzahlKurs[1] + AnzahlKurs[2] do
+                  Stundi[i,n,t] := 'Kunst gA';
+              end
+            else if Stundenplan[i,n] = 'Reli gA' then
+              begin
+                for t := 1 to AnzahlKurs[18] do
+                  Stundi[i,n,t] := 'Reli gA';
+              end
+            else if Stundenplan[i,n] = 'Sport' then
+              begin
+                for t := 1 to AnzahlKurs[30] do
+                  Stundi[i,n,t] := 'Sport gA';
+              end
+            else if Stundenplan[i,n] = 'Sprache eA' then
+              begin
+                for t := 1 to AnzahlKurs[21] do             {Englisch eA}
+                  Stundi[i,n,t] := 'Englisch eA';
+                for t := 1 + AnzahlKurs[21] to AnzahlKurs[21] + AnzahlKurs[22] do  {Franzoesisch eA}
+                  Stundi[i,n,t] := 'Franzoesisch eA';
+                for t := 1 + AnzahlKurs[21] + AnzahlKurs[22] to AnzahlKurs[21] + AnzahlKurs[22] + AnzahlKurs[23] do {Latein eA}
+                  Stundi[i,n,t] := 'Latein eA';
+                for t := 1 + AnzahlKurs[21] + AnzahlKurs[22] + AnzahlKurs[23] to AnzahlKurs[21] + AnzahlKurs[22] + AnzahlKurs[23] + AnzahlKurs[24] do              {Altgriechisch eA}
+                  Stundi[i,n,t] := 'Altgriechisch eA';
+              end
+            else if Stundenplan[i,n] = 'Sprache gA' then
+              begin
+                for t := 1 to AnzahlKurs[25] do             {Englisch gA}
+                  Stundi[i,n,t] := 'Englisch gA';
+                for t := 1 + AnzahlKurs[25] to AnzahlKurs[25] + AnzahlKurs[26] do  {Franzoesisch gA}
+                  Stundi[i,n,t] := 'Franzoesisch gA';
+                for t := 1 + AnzahlKurs[25] + AnzahlKurs[26] to AnzahlKurs[25] + AnzahlKurs[26] + AnzahlKurs[27] do {Latein gA}
+                  Stundi[i,n,t] := 'Latein gA';
+                for t := 1 + AnzahlKurs[25] + AnzahlKurs[26] + AnzahlKurs[27] to AnzahlKurs[25] + AnzahlKurs[26] + AnzahlKurs[27] + AnzahlKurs[28] do     {Altgriechisch gA}
+                  Stundi[i,n,t] := 'Altgriechisch gA';
+              end
+          end;
+      end;
+  end;
 
 procedure Stundenplanerstellung (var AnzahlKurs : KursAnzahl; var AnzahlSchuelerKurs : AnzahlProKurs; var Stundi : plan; var Stundenplan : temp_plan);
-var tag, stunde, kurs, i, n : integer;
+var tag, stunde, kurs, i, n, t : integer;
     temp : string;
   begin
     Stundi[1,1,1] := ' ';
@@ -341,33 +445,19 @@ var tag, stunde, kurs, i, n : integer;
     randomize;
     tag := 1;
     stunde := 2;
-    temp := gruppe;
-    Stundenplan[tag,stunde] := temp;
-    Stundenplan[tag,stunde + 1] := temp;
-    temp := gruppe;
-    stunde := 4;
-    Stundenplan[tag,stunde] := temp;
-    Stundenplan[tag,stunde + 1] := temp;
-    temp := gruppe;
-    stunde := 6;
-    Stundenplan[tag,stunde] := temp;
-    Stundenplan[tag,stunde + 1] := temp;
-    temp := gruppe;
-    stunde := 8;
-    Stundenplan[tag,stunde] := temp;
-    Stundenplan[tag,stunde + 1] := temp;
+    repeat
+      temp := gruppe;
+      Stundenplan[tag,stunde] := temp;
+      Stundenplan[tag,stunde + 1] := temp;
+      stunde := stunde + 2;
+    until stunde = 10;
+
     for tag := 2 to 5 do
       begin
-        randomize;
-        i := random(2) + 1;
-        if i = 1 then
-          begin
-            stunde := 1;
-            temp := gruppe;
-            Stundenplan[tag,stunde] := temp;
-            Stundenplan[tag,stunde + 1] := temp;
-          end
-        else i := 2; {nur als platzhalter für else}
+        stunde := 1;
+        temp := gruppe;
+        Stundenplan[tag,stunde] := temp;
+        Stundenplan[tag,stunde + 1] := temp;
         stunde := 3;
         temp := gruppe;
         Stundenplan[tag,stunde] := temp;
@@ -378,7 +468,7 @@ var tag, stunde, kurs, i, n : integer;
         Stundenplan[tag,stunde + 1] := temp;
         stunde := 7;
         randomize;
-        i := random(2) + 1;
+        i := random(3) + 1;
         if i = 1 then
           begin
             temp := gruppe;
@@ -387,14 +477,18 @@ var tag, stunde, kurs, i, n : integer;
           end
         else i := 2;
       end;
+    Stundenplanhilfe(Stundenplan,Stundi,AnzahlKurs);
     for i := 1 to 5 do
       begin
         for n := 1 to 9 do
           begin
-            write(i,',',n,' ');
-            writeln(Stundenplan[i,n]);         {writeln!}
+            for t := 1 to 5 do
+              begin
+                write(i,',',n,',',t);
+                writeln(Stundi[i,n,t]);
+              end;
+            readln;
           end;
-        readln;
       end;
   end;
 
